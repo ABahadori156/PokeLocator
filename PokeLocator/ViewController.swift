@@ -10,13 +10,13 @@ import UIKit
 import MapKit
 import FirebaseDatabase
 
-class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
+class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate, PokeSightingDelegate {
     @IBOutlet weak var mapView: MKMapView!
     let locationManager = CLLocationManager()
     var mapHasCenteredOnce = false
     
     
-    
+    var listVC = ListVC()
     //We got how to initialize GeoFire from the GeoFire github documentation - ALWAYS LOOK UP DOCUMENTATION
     var geoFire: GeoFire!
     var geoFireRef: FIRDatabaseReference!
@@ -25,6 +25,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     override func viewDidLoad() {
         super.viewDidLoad()
         mapView.delegate = self
+        
         
         //This means the map will follow with the user's location as he moves (like in PokemonGo)
         //As the location updates come in, we want to use the trackingMode to keep the map centered
@@ -35,7 +36,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         geoFireRef = FIRDatabase.database().reference()
         geoFire = GeoFire(firebaseRef: geoFireRef)
         
-        
+       
     }
     
  
@@ -234,14 +235,16 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     
     //On the map, when we press it, it adds a random Pokemon to the map. So when we press that pokeball, it adds a random pokemon in the middle of the map, so we can have a location to put it - Whatever the user is currently looking at
     //Everytime the Pokeball is pressed we create a sighting of a random pokemon in the middle of the map which calls GeoFire and sets the location for it on the Firebase Database
-    @IBAction func spotRandomPokemon(_ sender: UIButton) {
+    @IBAction func segueToListVC(_ sender: UIButton) {
         
-        let loc = CLLocation(latitude: mapView.centerCoordinate.latitude, longitude: mapView.centerCoordinate.longitude)
+    }
+    
+    func spotRandomPokemon() {
+        let centerLoc = CLLocation(latitude: mapView.centerCoordinate.latitude, longitude: mapView.centerCoordinate.longitude)
         
         let random = arc4random_uniform(151) + 1    //This is a range between 1-150
         
-        createSighting(forLocation: loc, withPokemon: Int(random))
-        print("Pokeball Tapped")
+        createSighting(forLocation: centerLoc, withPokemon: Int(random))
     }
   
     //Summary of the app so far

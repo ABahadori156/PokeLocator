@@ -176,7 +176,9 @@ class PokeAnnotation: NSObject, MKAnnotation {
         self.pokemonNumber = pokemonNumber
         
         //We're going into this list of pokemon and we're going to grab whatever pokeNumber it is so we go back -1 since the index starts at 0 (0-149)
+
         self.pokemonName = pokemon[pokemonNumber - 1].capitalized
+        
         
         //Setting the title of the annotation
         self.title = self.pokemonName
